@@ -3,7 +3,24 @@
     <b-form-group label="BS:" label-for="bs-select" style="margin-top:50px">
       <b-form-select v-model="selectedBS" :options="bsOptions" id="bs-select"></b-form-select>
     </b-form-group>
-    <div style="overflow:hidden">
+    <hr>
+    <div style="font-size:24px;">
+      OR Manual Input
+    </div>
+    <b-form-group label="B:" label-for="b-input">
+      <b-form-input
+        id="b-input"
+        v-model="b"
+      ></b-form-input>
+    </b-form-group>
+    <b-form-group label="P:" label-for="p-input">
+      <b-form-input
+        id="p-input"
+        v-model="p"
+      ></b-form-input>
+    </b-form-group>
+    <hr>
+    <div style="overflow:hidden;margin-top:2rem">
       <b-button class="r-btn col-lg-3" variant="outline-primary" @click="run">Run</b-button>
       <b-button class="r-btn float-right col-lg-3" @click="clear">Clear</b-button>
     </div>
@@ -26,6 +43,9 @@
         ],
         randomInitResult: -1,
         randomResult: -1,
+        callPercent: -1,
+        b: '',
+        p: '',
         infoText: ''
       }
     },
@@ -37,10 +57,6 @@
             text: bs
           }
         })
-      },
-      callPercent() {
-        let result = (1 / (this.selectedBS + 1)) * 100
-        return Number.parseFloat(result.toFixed(2))
       },
       op() {
         let diff = this.callPercent - this.randomResult
@@ -61,19 +77,24 @@
     methods: {
       run() {
         this.clearInfoText()
-        if (!this.selectedBS) {
+        if (!this.selectedBS && !(this.b && this.p)) {
           this.infoText = 'please fill form'
           return
         }
+        this.callPercent = this.calcCallPercent(this.selectedBS || (this.b / this.p))
         this.randomResult = this.calcRandomResult()
       },
       clear() {
         this.clearSelectedBS()
+        this.clearInputBP()
         this.resetRandomResult()
         this.clearInfoText()
       },
       clearSelectedBS() {
         this.selectedBS = null
+      },
+      clearInputBP() {
+        this.b = this.p = ''
       },
       clearInfoText() {
         this.infoText = ''
@@ -84,7 +105,11 @@
       calcRandomResult() {
         let result = Math.random() * 100
         return Number.parseFloat(result.toFixed(2))
-      }
+      },
+      calcCallPercent(bs) {
+        let result = (1 / (bs + 1)) * 100
+        return Number.parseFloat(result.toFixed(2))
+      },
     }
   }
 </script>
