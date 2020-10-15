@@ -8,8 +8,9 @@
       <b-button class="r-btn float-right col-lg-3" @click="clear">Clear</b-button>
     </div>
     <template v-if="hasResult">
-      <b-alert show variant="success" v-if="randomResult < callPercent">{{ randomResult }} {{ op }} {{  callPercent }}</b-alert>
-      <b-alert show variant="danger" v-else>{{ randomResult }} {{ op }} {{  callPercent }}</b-alert>
+      <b-alert show :variant="(randomResult < callPercent) ? 'success' : 'danger'">
+        {{ randomResult }} {{ op }} {{  callPercent }}
+      </b-alert>
     </template>
     <b-alert show variant="info" v-if="infoText">{{ infoText }}</b-alert>
   </div>
